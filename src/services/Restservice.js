@@ -17,6 +17,17 @@ const Login = async(data)=>{
     return responsedata;
 }
 
+
+const Query = async(data)=>{
+    let responsedata;
+    await postData(apiurl+'/dev/query', data)
+    .then((response) => {
+        responsedata = response; 
+    });
+    return responsedata;
+}
+
+
 const Sendotp =  async(contact)=>{
     let responsedata;
     await getData(apiurl+'/sendotp?phonenumber='+contact)
@@ -129,8 +140,9 @@ const preparepostdata = (data,token)=>{
       }
     if(token){
         let token  = localStorage.getItem("token");
+        body.headers['Authorization']= `Bearer ${token}`;
     }
     return body;
 }
 
-export  {Register,Login,Sendotp,Verifyotp,GetUser};
+export  {Register,Login,Sendotp,Verifyotp,GetUser,Query};

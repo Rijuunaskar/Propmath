@@ -1,10 +1,5 @@
 import React from 'react';
 import styled from 'styled-components'
-import FaceIcon from '@mui/icons-material/Face';
-import LockIcon from '@mui/icons-material/Lock';
-import EmailIcon from '@mui/icons-material/Email';
-import CallIcon from '@mui/icons-material/Call';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import Signimg from '../assets/signup.jpg';
 import AddBusinessRoundedIcon from '@mui/icons-material/AddBusinessRounded';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
@@ -17,6 +12,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import LanguageIcon from '@mui/icons-material/Language';
 import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
+import {Query} from '../services/Restservice.js';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 
 
 
@@ -147,6 +144,8 @@ const[manualtext,setManualtext] = React.useState(0);
 const[selectfloor,setSelectfloor] = React.useState(0);
 const[highrise,setHighrise] = React.useState(false);
 const[carparking,setCarparking] = React.useState(false);
+const [open, setOpen] = React.useState(false);
+const [msg, setMsg] = React.useState(false);
 
 const[lat_lon_lvl,setLat_Lon_Lvl] = React.useState(false);
 const[other_lvl,setOther_Lvl] = React.useState(false);
@@ -195,40 +194,59 @@ const handelCarparking = event =>{
 
 const submit = event =>{
     const postData={
-        city:{city},
-        chooselevel:{chooselevel},
-        textfirst:{textfirst},
-        lat:{lat},
-        lon:{lon},
-        manualtext:{manualtext},
-        selectfloor:{selectfloor},
-        highrise:{highrise},
-        carparking:{carparking},
+        city:city,
+        chooselevel:chooselevel,
+        textfirst:textfirst,
+        lat:lat,
+        lon:lon,
+        manualtext:manualtext,
+        selectfloor:selectfloor,
+        highrise:highrise,
+        carparking:carparking,
     };
     console.log(postData)
+    Query(postData).then((data)=>{
+        console.log(data)
+        if(data.success){
+            console.log('success')
+            showsnackbar(data.message);
+        }else{
+            console.log('-----------')
+            showsnackbar("Some thing went wrong!!!");
+        }
+    })
 };
 
 
-
-    const cityData = [
-        { value: 'howrah', name: 'Howrah',key:"1" },
-        { value: 'kolkata', name: 'Kolkata',key:"2" },
-        { value: 'darjeeling', name: 'Darjeeling',key:"3" },
-        { value: 'baghajatin', name: 'Baghajatin',key:"4" }              
-    ];
-    const level = [
-        { value: 'Micromarket Level', name: 'Micromarket Level',key:"1" },
-        { value: 'Area Level', name: 'Area Level',key:"2" },
-        { value: 'Lat-Lon level', name: 'Lat-Lon level',key:"3" },      
-    ];
-    const floor = [
-        { value: 'Very Low', name: 'Very Low',key:"1" },
-        { value: 'Low', name: 'Low',key:"2" },
-        { value: 'Medium', name: 'Medium',key:"3" }, 
-        { value: 'High', name: 'High',key:"4" }     
-    ];
+const showsnackbar =((msg)=>{
+    setOpen(true);
+    setMsg(msg);
+    setTimeout(function(){
+        setOpen(false);
+    },3000)
+})
+const cityData = [
+    { value: 'howrah', name: 'Howrah',key:"1" },
+    { value: 'kolkata', name: 'Kolkata',key:"2" },
+    { value: 'darjeeling', name: 'Darjeeling',key:"3" },
+    { value: 'baghajatin', name: 'Baghajatin',key:"4" }              
+];
+const level = [
+    { value: 'Micromarket Level', name: 'Micromarket Level',key:"1" },
+    { value: 'Area Level', name: 'Area Level',key:"2" },
+    { value: 'Lat-Lon level', name: 'Lat-Lon level',key:"3" },      
+];
+const floor = [
+    { value: 'Very Low', name: 'Very Low',key:"1" },
+    { value: 'Low', name: 'Low',key:"2" },
+    { value: 'Medium', name: 'Medium',key:"3" }, 
+    { value: 'High', name: 'High',key:"4" }     
+];
   return (
         <>
+         <Snackbar anchorOrigin={{vertical: 'top',horizontal: 'center',}} open={open}
+                message={msg}
+            />
             <Navbar/>
             <Bodycontainer>
 
